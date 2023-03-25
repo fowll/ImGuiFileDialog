@@ -1103,6 +1103,28 @@ namespace IGFD
 							vFileInfos->fileStyle = _file.second;
 						}
 					}
+					if (_flag.first & IGFD_FileStyleByDirContains)
+					{
+						std::string cond;
+						std::stringstream ss{_file.first};
+						bool result = true;
+
+						while (std::getline(ss, cond, ';'))
+						{
+							std::filesystem::path fspath(vFileInfos->filePath);
+							fspath.append(vFileInfos->fileNameExt).append(cond);
+							if (!std::filesystem::exists(fspath))
+							{
+								result = false;
+							}
+						}
+
+						if (result)
+						{
+							vFileInfos->fileStyle = _file.second;
+						}
+
+					}
 
 					if (vFileInfos->fileStyle.use_count())
 						return true;
@@ -3620,7 +3642,7 @@ namespace IGFD
 			g.LastItemData.StatusFlags |= ImGuiItemStatusFlags_ToggledSelection;
 
 		//////////////////////////////////////////////////////////////////
-		// this function copy ImGui::Selectable just for this line.... 
+		// this function copy ImGui::Selectable just for this line....
 		hovered |= vFlashing;
 		//////////////////////////////////////////////////////////////////
 
